@@ -21,7 +21,7 @@ describe("syncFiles", () => {
       "rsync",
       [
         "-e",
-        "ssh -p 54321 -i /home/.ssh/web_deploy -o StrictHostKeyChecking=no",
+        "'ssh -p 54321 -i /home/.ssh/web_deploy -o StrictHostKeyChecking=no'",
         "--test",
         "./sourcePath",
         "username@targetserver:/destFolder/subFolder/"
