@@ -23,9 +23,7 @@ async function run() {
     console.log(`----------------------------------------------------------------`);
 
     await verifyRsyncInstalled();
-    // Clean the key removing '\r' characters and adding a '\n' to the end
-    const cleanKey =  userArguments.private_ssh_key.replace('\r','') + '\n';
-    const privateKeyPath = await setupSSHPrivateKey(cleanKey);
+    const privateKeyPath = await setupSSHPrivateKey(userArguments.private_ssh_key);
     await syncFiles(privateKeyPath, userArguments);
 
     console.log("✅ Deploy Complete");
@@ -125,6 +123,9 @@ export async function setupSSHPrivateKey(key: string) {
   } else {
     console.log(`[SSH] ${knownHostsPath} file exist`);
   }
+
+  console.log('Adding New Line to the end of the key');
+  const cleanKey = key + '\n';
 
   await promises.writeFile(privateKeyPath, key, {
     encoding: 'utf8',
