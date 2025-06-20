@@ -127,7 +127,7 @@ export async function setupSSHPrivateKey(key: string) {
   console.log('Adding New Line to the end of the key');
   const cleanKey = key + '\n';
 
-  await promises.writeFile(privateKeyPath, key, {
+  await promises.writeFile(privateKeyPath, cleanKey, {
     encoding: 'utf8',
     mode: 0o600
   });
