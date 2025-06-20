@@ -23,7 +23,9 @@ async function run() {
     console.log(`----------------------------------------------------------------`);
 
     await verifyRsyncInstalled();
-    const privateKeyPath = await setupSSHPrivateKey(userArguments.private_ssh_key);
+    // Clean the key removing '\r' characters and adding a '\n' to the end
+    const cleanKey =  userArguments.private_ssh_key.replace('\r','') + '\n';
+    const privateKeyPath = await setupSSHPrivateKey(cleanKey);
     await syncFiles(privateKeyPath, userArguments);
 
     console.log("✅ Deploy Complete");
@@ -63,8 +65,7 @@ export async function syncFiles(privateKeyPath: string, args: IActionArguments) 
   try {
     const rsyncArguments: string[] = [];
 
-    rsyncArguments.push("-e");
-    rsyncArguments.push("'ssh -p " + args.ssh_port + " -i " + privateKeyPath + " -o StrictHostKeyChecking=no'");
+    rsyncArguments.push(...stringArgv(`-e 'ssh -p ${args.ssh_port} -i ${privateKeyPath} -o StrictHostKeyChecking=no'`));
 
     rsyncArguments.push(...stringArgv(args.rsync_options));
 
